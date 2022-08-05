@@ -1,0 +1,22 @@
+{
+  "name": "create-toyo-for-boxes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "migrate-files": "ts-node migrate-files.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1",
+    "node-scp": "^0.0.18",
+    "parse": "^3.4.3"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
+    "@types/parse": "^2.18.16"
+  }
+}
