@@ -28,6 +28,7 @@ export class BoxRepository {
   async findClosedBoxes(): Promise<Box[]> {
     const boxesQuery = new Parse.Query(this.ParseCls);
     boxesQuery.equalTo("isOpen", false);
+    boxesQuery.equalTo("toyoHash", undefined);
 
     const result = await boxesQuery.findAll();
     return result.map((item) => {

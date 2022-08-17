@@ -37,21 +37,21 @@ const haruko = new ToyoPersona({
 });
 
 export const kytuntBoxDistribution = new Map<ToyoPersona, number>([
-  [tatsu, 476],
-  [nyima, 293],
-  [mingYue, 46],
-  [datu, 46],
-  [wangHu, 37],
-  [mizuchi, 14],
-  [haruko, 4],
+  [tatsu, 10],
+  [nyima, 8],
+  [mingYue, 2],
+  [datu, 2],
+  [wangHu, 2],
+  [mizuchi, 0],
+  [haruko, 0],
 ]);
 
 export const kytuntFortifiedBoxDistribution = new Map<ToyoPersona, number>([
   [tatsu, 0],
   [nyima, 0],
-  [mingYue, 258],
-  [datu, 258],
-  [wangHu, 144],
-  [mizuchi, 39],
-  [haruko, 18],
+  [mingYue, 10],
+  [datu, 10],
+  [wangHu, 10],
+  [mizuchi, 4],
+  [haruko, 1],
 ]);
