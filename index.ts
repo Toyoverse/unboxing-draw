@@ -25,36 +25,36 @@ const crypt = new Crypt();
 const privateKey = process.env.PRIVATE_KEY || "";
 
 const assignToyo = async (box: Box) => {
-  let toyo = raffler.raffle(box.typeId);
-  toyo = await toyoRepository.save(toyo);
+    let toyo = raffler.raffle(box.typeId);
+    toyo = await toyoRepository.save(toyo);
 
-  const json = JSON.stringify({ id: toyo.objectId, name: toyo.name });
-  const toyoHash = crypt.encrypt(json, privateKey);
+    const json = JSON.stringify({ id: toyo.objectId, name: toyo.name });
+    const toyoHash = crypt.encrypt(json, privateKey);
 
-  metadataRepository.save(toyoHash, toyo.toyoMetadata);
+    metadataRepository.save(toyoHash, toyo.toyoMetadata);
 
-  box.toyoHash = toyoHash;
-  box = await boxRepository.save(box);
-  console.log(box.id);
-  return box;
+    box.toyoHash = toyoHash;
+    box = await boxRepository.save(box);
+    console.log(box.id);
+    return box;
 };
 
 const main = async () => {
-  let boxes = await boxRepository.findClosedBoxes();
+    let boxes = await boxRepository.findClosedBoxes();
 
-  for (let box of boxes) {
-    try {
-      box = await assignToyo(box);
-    } catch (e) {
-      if (e instanceof InvalidBoxTypeError || e instanceof NoToyosError) {
-        console.log(e.message);
-      } else {
-        throw e;
-      }
+    for (let box of boxes) {
+        try {
+            box = await assignToyo(box);
+        } catch (e) {
+            if (e instanceof InvalidBoxTypeError || e instanceof NoToyosError) {
+                console.log(e.message);
+            } else {
+                throw e;
+            }
+        }
     }
-  }
 
-  console.log("Finalizado");
+    console.log("Finalizado");
 };
 
 main();

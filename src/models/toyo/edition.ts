@@ -1,5 +1,5 @@
 export enum ToyoEdition {
-  COMMON,
+  COMMON = 1,
   UNCOMMON,
   RARE,
   LIMITED,
