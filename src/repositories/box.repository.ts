@@ -28,7 +28,7 @@ export class BoxRepository {
     async findClosedBoxes(walletAddress?: string): Promise<Box[]> {
         const boxesQuery = new Parse.Query(this.ParseCls);
         boxesQuery.equalTo("isOpen", false);
-        boxesQuery.equalTo("toyoHash", undefined);
+        boxesQuery.equalTo("toyo", undefined);
         if (walletAddress) {
             const Player = Parse.Object.extend("Players");
             const playerQuery = new Parse.Query(Player);
