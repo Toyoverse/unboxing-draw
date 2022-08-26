@@ -1,57 +1,57 @@
 import { ToyoEdition, ToyoPersona } from "../models/toyo";
 
 const tatsu = new ToyoPersona({
-    objectId: "G2FNb70T2m",
+    objectId: "MeQgZKuDiY",
     name: "Tatsu",
     edition: ToyoEdition.COMMON,
 });
 const nyima = new ToyoPersona({
-    objectId: "WYWZmbfFuE",
+    objectId: "3LB0Yvmo52",
     name: "Nyima",
     edition: ToyoEdition.UNCOMMON,
 });
 const mingYue = new ToyoPersona({
-    objectId: "y4As33SlBa",
+    objectId: "ElHd8iCGHx",
     name: "Ming Yue",
     edition: ToyoEdition.RARE,
 });
 const datu = new ToyoPersona({
-    objectId: "D3dJyO5NVE",
+    objectId: "vIkVXvE2vO",
     name: "Datu",
     edition: ToyoEdition.RARE,
 });
 const wangHu = new ToyoPersona({
-    objectId: "gx1tCZCKir",
+    objectId: "exxpgu35Kn",
     name: "Wang Hu",
     edition: ToyoEdition.LIMITED,
 });
 const mizuchi = new ToyoPersona({
-    objectId: "iGI0z7RIBI",
+    objectId: "XFtzfuUqH2",
     name: "Mizuchi",
     edition: ToyoEdition.COLLECTORS,
 });
 const haruko = new ToyoPersona({
-    objectId: "VJp4xfNJ4A",
+    objectId: "PnM1ENPEBA",
     name: "Haruko",
     edition: ToyoEdition.PROTOTYPE,
 });
 
 export const kytuntBoxDistribution = new Map<ToyoPersona, number>([
-    [tatsu, 14],
-    [nyima, 10],
-    [mingYue, 3],
-    [datu, 3],
-    [wangHu, 3],
-    [mizuchi, 0],
+    [tatsu, 225],
+    [nyima, 169],
+    [mingYue, 7],
+    [datu, 21],
+    [wangHu, 19],
+    [mizuchi, 8],
     [haruko, 0],
 ]);
 
 export const kytuntFortifiedBoxDistribution = new Map<ToyoPersona, number>([
     [tatsu, 0],
     [nyima, 0],
-    [mingYue, 13],
-    [datu, 13],
-    [wangHu, 13],
-    [mizuchi, 6],
-    [haruko, 3],
+    [mingYue, 57],
+    [datu, 57],
+    [wangHu, 46],
+    [mizuchi, 8],
+    [haruko, 1],
 ]);
