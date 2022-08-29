@@ -1,4 +1,4 @@
-const Parse = require("parse/node");
+import * as Parse from "parse/node";
 
 export const config = () => {
   const BACK4APP_APPLICATION_ID = process.env.BACK4APP_APPLICATION_ID || "";

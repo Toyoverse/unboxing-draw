@@ -1,4 +1,4 @@
-import env from "dotenv";
+import "dotenv/config";
 import * as back4app from "./src/config/back4app";
 import { InvalidBoxTypeError } from "./src/errors/invalid-box-type";
 import { NoToyosError } from "./src/errors/no-toyos";
@@ -11,7 +11,6 @@ import { ToyoRepository } from "./src/repositories/toyo.repository";
 import { Crypt } from "./src/utils/crypt/crypt";
 import { PseudoRandom } from "./src/utils/random/pseudo-random";
 
-env.config();
 back4app.config();
 
 const random = new PseudoRandom();
@@ -25,36 +24,40 @@ const crypt = new Crypt();
 const privateKey = process.env.PRIVATE_KEY || "";
 
 const assignToyo = async (box: Box) => {
-    let toyo = raffler.raffle(box.typeId);
-    toyo = await toyoRepository.save(toyo);
+  let toyo = raffler.raffle(box.typeId);
+  toyo = await toyoRepository.save(toyo);
 
-    const json = JSON.stringify({ id: toyo.objectId, name: toyo.name });
-    const toyoHash = crypt.encrypt(json, privateKey);
+  const toyoId = toyo.objectId || "";
+  const toyoHash = crypt.encrypt(toyoId, privateKey);
 
-    metadataRepository.save(toyoHash, toyo.toyoMetadata);
+  metadataRepository.save(toyoHash, toyo.toyoMetadata);
 
-    box.toyoHash = toyoHash;
-    box = await boxRepository.save(box);
-    console.log(box.id);
-    return box;
+  box.toyoHash = toyoHash;
+  box = await boxRepository.save(box);
+  //   console.log(box.id);
+  console.log(box.toyoHash);
+
+  const decryptStr = crypt.decrypt(box.toyoHash, privateKey);
+  console.log(decryptStr);
+  return box;
 };
 
 const main = async () => {
-    let boxes = await boxRepository.findClosedBoxes();
+  let boxes = await boxRepository.findClosedBoxes();
 
-    for (let box of boxes) {
-        try {
-            box = await assignToyo(box);
-        } catch (e) {
-            if (e instanceof InvalidBoxTypeError || e instanceof NoToyosError) {
-                console.log(e.message);
-            } else {
-                throw e;
-            }
-        }
+  for (let box of boxes) {
+    try {
+      box = await assignToyo(box);
+    } catch (e) {
+      if (e instanceof InvalidBoxTypeError || e instanceof NoToyosError) {
+        console.log(e.message);
+      } else {
+        throw e;
+      }
     }
+  }
 
-    console.log("Finalizado");
+  console.log("Finalizado");
 };
 
 main();

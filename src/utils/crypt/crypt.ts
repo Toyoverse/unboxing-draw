@@ -6,7 +6,7 @@ export class Crypt {
   private cfg: any;
 
   constructor() {
-    this.iv = CryptoJS.enc.Hex.parse(process.env.CRYPTO_IV || "");
+    this.iv = CryptoJS.enc.Hex.parse(process.env.CRYPTO_IV);
 
     this.cfg = {
       iv: this.iv,
@@ -16,15 +16,11 @@ export class Crypt {
   }
 
   encrypt(text: string, hexKey: string): string {
-    hexKey = hexKey.replace("0x", "");
-
     const _key = CryptoJS.enc.Hex.parse(hexKey);
     return CryptoJS.AES.encrypt(text, _key, this.cfg).toString();
   }
 
   decrypt(ciphertext: string, hexKey: string): string {
-    hexKey = hexKey.replace("0x", "");
-
     const _key = CryptoJS.enc.Hex.parse(hexKey);
     return CryptoJS.AES.decrypt(ciphertext, _key, this.cfg).toString(
       CryptoJS.enc.Utf8
