@@ -1,6 +1,5 @@
-import path from "path";
-import fs from "fs";
-import { Client } from "node-scp";
+import * as path from "path";
+import * as fs from "fs";
 
 export class MetadataRepository {
   private folder: string;

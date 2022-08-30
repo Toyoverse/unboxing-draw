@@ -2,7 +2,7 @@ import { BoxType } from "./types";
 
 export default class Box {
   id?: string;
-  toyoHash?: string;
+  toyoHash: string;
   tokenId?: string;
   typeId: BoxType;
   isOpen: boolean;
@@ -11,7 +11,7 @@ export default class Box {
 
   constructor(attrs: {
     id?: string;
-    toyoHash?: string;
+    toyoHash: string;
     tokenId?: string;
     typeId: BoxType;
     isOpen: boolean;
