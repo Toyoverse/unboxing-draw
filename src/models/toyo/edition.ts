@@ -3,6 +3,6 @@ export enum ToyoEdition {
   UNCOMMON,
   RARE,
   LIMITED,
-  COLLECTORS,
+  COLLECTOR,
   PROTOTYPE,
 }

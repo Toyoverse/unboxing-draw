@@ -41,7 +41,7 @@ const assignToyo = async (box: Box) => {
 
 const main = async () => {
     let boxes = await boxRepository.findClosedBoxes();
-
+    console.log("Quantidade de Caixas: " + boxes.length);
     let nAssignedBoxes = 0;
     for (let box of boxes) {
         try {

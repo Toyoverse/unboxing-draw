@@ -217,6 +217,7 @@ function _mapLevel(rarity: number): number {
             index = Math.floor(Math.random() * levels.length);
             return levels[index];
         default:
+            console.log("Rarity not handled: " + rarity);
             throw new Error("Invalid rarity");
     }
 }
