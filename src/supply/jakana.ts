@@ -53,32 +53,27 @@ const doge = new ToyoPersona({
 });
 
 export const jakanaBoxDistribution = new Map<ToyoPersona, number>([
-  [slicky, 0],
-  [donBarko, 0],
-  [bikEy3z, 0],
-  [gaja, 0],
-  [rocker, 0],
-  [uzi, 0],
-  [yawara, 0],
-  [ribbit, 0],
-  [laoQing, 0],
-  [doge, 0],
+  [slicky, 1896],
+  [donBarko, 1437],
+  [bikEy3z, 125],
+  [gaja, 131],
+  [rocker, 137],
+  [uzi, 78],
+  [yawara, 81],
+  [ribbit, 31],
+  [laoQing, 30],
+  [doge, 20],
 ]);
 
 export const jakanaFortifiedBoxDistribution = new Map<ToyoPersona, number>([
   [slicky, 0],
   [donBarko, 0],
-  [bikEy3z, 0],
-  [gaja, 0],
-  [rocker, 0],
-  [uzi, 0],
-  [yawara, 0],
-  [ribbit, 0],
-  [laoQing, 0],
-  [doge, 0],
+  [bikEy3z, 37],
+  [gaja, 27],
+  [rocker, 26],
+  [uzi, 17],
+  [yawara, 18],
+  [ribbit, 7],
+  [laoQing, 7],
+  [doge, 4],
 ]);
-
-let total = 0;
-for (let value of jakanaBoxDistribution.values()) {
-  total += value;
-}
