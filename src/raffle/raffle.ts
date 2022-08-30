@@ -3,7 +3,7 @@ import { NoToyosError } from "../errors/no-toyos";
 import { BoxType } from "../models/box/types";
 import { Toyo, ToyoEdition, ToyoPersona } from "../models/toyo";
 import { ToyoPart } from "../models/toyo/part";
-import { ToyoPiece } from "../models/toyo/piece";
+import * as Parse from "parse/node";
 import {
     jakanaBoxDistribution,
     jakanaFortifiedBoxDistribution,
@@ -17,19 +17,25 @@ import { Random } from "../utils/random/random";
 export class Raffler {
     constructor(private _random: Random) {}
 
-    raffle(boxType: BoxType): Toyo {
+    async raffle(boxType: BoxType): Promise<Toyo> {
         switch (boxType) {
             case BoxType.JAKANA:
-                return this._raffle(BoxType.JAKANA, jakanaBoxDistribution);
+                return await this._raffle(
+                    BoxType.JAKANA,
+                    jakanaBoxDistribution
+                );
             case BoxType.JAKANA_FORTIFIED:
-                return this._raffle(
+                return await this._raffle(
                     BoxType.JAKANA_FORTIFIED,
                     jakanaFortifiedBoxDistribution
                 );
             case BoxType.KYTUNT:
-                return this._raffle(BoxType.KYTUNT, kytuntBoxDistribution);
+                return await this._raffle(
+                    BoxType.KYTUNT,
+                    kytuntBoxDistribution
+                );
             case BoxType.KYTUNT_FORTIFIED:
-                return this._raffle(
+                return await this._raffle(
                     BoxType.KYTUNT_FORTIFIED,
                     kytuntFortifiedBoxDistribution
                 );
@@ -40,10 +46,10 @@ export class Raffler {
         }
     }
 
-    private _raffle(
+    private async _raffle(
         type: BoxType,
         distribution: Map<ToyoPersona, number>
-    ): Toyo {
+    ): Promise<Toyo> {
         let length = 0;
         for (let value of distribution.values()) {
             length += value;
@@ -58,7 +64,7 @@ export class Raffler {
 
             if (position >= accumulator && position < accumulator + value) {
                 distribution.set(toyoPersona, value - 1);
-                return this._buildToyo(toyoPersona);
+                return await this._buildToyo(toyoPersona);
             }
 
             accumulator += value;
@@ -69,19 +75,21 @@ export class Raffler {
         );
     }
 
-    private _buildToyo(toyoPersona: ToyoPersona): Toyo {
-        const { parts, allPartsStats, toyoLevel } = _buildParts(toyoPersona);
+    private async _buildToyo(toyoPersona: ToyoPersona): Promise<Toyo> {
+        const tPersona = await _getToyoPersona(toyoPersona.objectId);
+
+        const { parts, allPartsStats, toyoLevel } = _buildParts(tPersona);
         return new Toyo({
             name: toyoPersona.name,
-            toyoPersonaOrigin: toyoPersona,
+            toyoPersonaOrigin: tPersona,
             createdAt: new Date(),
             typeId: "9",
             isToyoSelected: false,
             hasTenParts: true,
             toyoMetadata: this.generateMetadata(
-                toyoPersona,
+                tPersona,
                 allPartsStats,
-                parts[0]
+                toyoLevel
             ),
             level: toyoLevel,
             parts: parts,
@@ -91,7 +99,7 @@ export class Raffler {
     private generateMetadata(
         toyoPersona: ToyoPersona,
         toyoStats: Record<string, number>,
-        parts: ToyoPart
+        toyoLevel: number
     ) {
         return {
             name: toyoPersona.name,
@@ -101,11 +109,11 @@ export class Raffler {
             attributes: [
                 {
                     trait_type: "Type",
-                    value: 9,
+                    value: toyoLevel,
                 },
                 {
                     trait_type: "Toyo",
-                    value: "Ribbit",
+                    value: toyoPersona.name,
                 },
                 {
                     trait_type: "Region",
@@ -113,7 +121,7 @@ export class Raffler {
                 },
                 {
                     trait_type: "Rarity",
-                    value: parts.rarity,
+                    value: toyoPersona.rarity,
                 },
                 {
                     display_type: "number",
@@ -123,7 +131,7 @@ export class Raffler {
                 {
                     display_type: "number",
                     trait_type: "Strength",
-                    value: toyoStats.strength,
+                    value: toyoStats.physicalStrength,
                 },
                 {
                     display_type: "number",
@@ -270,8 +278,7 @@ function _buildParts(toyoPersona: any): {
         "R_FOOT",
         "L_FOOT",
     ];
-    const rarity: number = toyoPersona.edition;
-    console.log("rarity", rarity);
+    const rarity: number = toyoPersona.rarityId;
 
     const allPartsStats: Record<string, number> = {
         vitality: 0,
@@ -340,4 +347,15 @@ function _buildParts(toyoPersona: any): {
     const levels: any = parts.map((part) => part.level);
     const maxLevel: number | undefined = Math.max(...levels);
     return { parts, toyoLevel: maxLevel, allPartsStats };
+}
+async function _getToyoPersona(objectId: string) {
+    const toyoPersona = Parse.Object.extend("ToyoPersona", ToyoPersona);
+    const toyoPersonaQuery = new Parse.Query(toyoPersona);
+    toyoPersonaQuery.equalTo("objectId", objectId);
+
+    const result: any = await toyoPersonaQuery.first();
+
+    const toyo = new ToyoPersona(result.toJSON());
+    toyo.rarityId = ToyoEdition[toyo.rarity];
+    return toyo;
 }

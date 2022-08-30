@@ -8,6 +8,8 @@ export class ToyoPersona {
     thumbnail?: string;
     video?: string;
     region?: string;
+    rarity?: string;
+    rarityId?: number;
 
     constructor(attrs: {
         objectId: string;
@@ -17,6 +19,8 @@ export class ToyoPersona {
         thumbnail?: string;
         video?: string;
         region?: string;
+        rarity?: string;
+        rarityId?: number;
     }) {
         this.objectId = attrs.objectId;
         this.name = attrs.name;
@@ -25,5 +29,7 @@ export class ToyoPersona {
         this.thumbnail = attrs.thumbnail;
         this.video = attrs.video;
         this.region = attrs.region;
+        this.rarity = attrs.rarity;
+        this.rarityId = attrs.rarityId;
     }
 }
