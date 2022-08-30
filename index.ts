@@ -21,33 +21,31 @@ const metadataRepository = new MetadataRepository();
 
 const crypt = new Crypt();
 
-const privateKey = process.env.PRIVATE_KEY || "";
-
 const assignToyo = async (box: Box) => {
   let toyo = raffler.raffle(box.typeId);
   toyo = await toyoRepository.save(toyo);
 
-  const toyoId = toyo.objectId || "";
-  const toyoHash = crypt.encrypt(toyoId, privateKey);
+  const privateKey = process.env.PRIVATE_KEY_HASHBOX;
+  const toyoHash = crypt.encrypt(toyo.objectId, privateKey);
 
   metadataRepository.save(toyoHash, toyo.toyoMetadata);
 
   box.toyoHash = toyoHash;
   box = await boxRepository.save(box);
-  //   console.log(box.id);
-  console.log(box.toyoHash);
+  console.log(`box: ${box.id} toyoId: ${toyo.objectId} hash: ${box.toyoHash}`);
 
-  const decryptStr = crypt.decrypt(box.toyoHash, privateKey);
-  console.log(decryptStr);
   return box;
 };
 
 const main = async () => {
   let boxes = await boxRepository.findClosedBoxes();
 
+  let nAssignedBoxes = 0;
   for (let box of boxes) {
     try {
       box = await assignToyo(box);
+      const completedPercentage = (++nAssignedBoxes / boxes.length) * 100;
+      console.log(completedPercentage.toFixed(2) + "%");
     } catch (e) {
       if (e instanceof InvalidBoxTypeError || e instanceof NoToyosError) {
         console.log(e.message);
@@ -59,5 +57,13 @@ const main = async () => {
 
   console.log("Finalizado");
 };
+
+// const main = () => {
+//   const toyoId = "01wecM9g39";
+//   const key = process.env.PRIVATE_KEY_HASHBOX;
+
+//   const cypher = crypt.encrypt(toyoId, key);
+//   console.log(cypher);
+// };
 
 main();
