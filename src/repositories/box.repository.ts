@@ -40,7 +40,7 @@ export class BoxRepository {
         const boxesQuery = new Parse.Query(this.ParseCls);
         boxesQuery.equalTo("isOpen", false);
         boxesQuery.equalTo("updateMetadata", undefined);
-        boxesQuery.limit(2);
+        boxesQuery.limit(500);
         if (walletAddress) {
             const Player = Parse.Object.extend("Players");
             const playerQuery = new Parse.Query(Player);
