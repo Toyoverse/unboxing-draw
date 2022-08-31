@@ -11,12 +11,9 @@ export class ToyoRepository {
 
         const parserPersona = await this._setPersona(toyo.toyoPersonaOrigin);
         toyo.toyoPersonaOrigin = parserPersona;
-        const relationParts = await this._setParts(
-            toyo.parts,
-            parserPersona
-        );
+        const relationParts = await this._setParts(toyo.parts, parserPersona);
         delete toyo.parts;
-        const partsRelationToPlayer = parseToyo.relation('parts');
+        const partsRelationToPlayer = parseToyo.relation("parts");
         partsRelationToPlayer.add(relationParts);
 
         parseToyo = await parseToyo.save(toyo);
@@ -26,6 +23,24 @@ export class ToyoRepository {
         return toyo;
     }
 
+    async findToyoById(
+        id: string
+    ): Promise<{ toyo: Toyo; toyoParseObj: Parse.Object }> {
+        const ParseToyo = Parse.Object.extend("Toyo", Toyo);
+        const query = new Parse.Query(ParseToyo);
+        query.equalTo("objectId", id);
+        query.include("toyoPersonaOrigin");
+        const result: any = await query.first();
+        if (result) {
+            const toyo: Toyo = new Toyo(result.toJSON());
+            const parts = await result.relation("parts").query().findAll();
+            toyo.parts = parts;
+            return { toyo, toyoParseObj: result };
+        }
+
+        throw Error("Object not found with id " + id);
+    }
+
     private async _setPersona(persona: ToyoPersona): Promise<any> {
         const query = new Parse.Query("ToyoPersona");
         query.equalTo("objectId", persona.objectId);
@@ -33,10 +48,7 @@ export class ToyoRepository {
         return parserPersona;
     }
 
-    private async _setParts(
-        parts?: ToyoPart[],
-        parserPersona?: any
-    ) {
+    private async _setParts(parts?: ToyoPart[], parserPersona?: any) {
         const ParseToyoPart = Parse.Object.extend("ToyoParts", ToyoPart);
 
         let relation = [];

@@ -13,6 +13,17 @@ export class BoxRepository {
         return this.toModel(parseBox);
     }
 
+    async saveToyo(box: Box, toyo: Parse.Object): Promise<Box> {
+        let parseBox: Parse.Object<Parse.Attributes> = new this.ParseCls();
+        parseBox.set("objectId", box.id);
+        parseBox.set("toyo", toyo);
+        parseBox.set("toyoHash", box.toyoHash);
+        parseBox.set("isOpen", box.isOpen);
+        parseBox.set("updateMetadata", true);
+        parseBox = await parseBox.save();
+        return this.toModel(parseBox);
+    }
+
     async findById(id: string): Promise<Box> {
         const boxesQuery = new Parse.Query(this.ParseCls);
         boxesQuery.equalTo("objectId", id);
@@ -28,7 +39,8 @@ export class BoxRepository {
     async findClosedBoxes(walletAddress?: string): Promise<Box[]> {
         const boxesQuery = new Parse.Query(this.ParseCls);
         boxesQuery.equalTo("isOpen", false);
-        boxesQuery.equalTo("toyoHash", undefined);
+        boxesQuery.equalTo("updateMetadata", undefined);
+        boxesQuery.limit(2);
         if (walletAddress) {
             const Player = Parse.Object.extend("Players");
             const playerQuery = new Parse.Query(Player);
@@ -37,7 +49,7 @@ export class BoxRepository {
             boxesQuery.equalTo("player", player[0]);
         }
 
-        const result = await boxesQuery.findAll();
+        const result = await boxesQuery.find();
         return result.map((item) => {
             return this.toModel(item);
         });
